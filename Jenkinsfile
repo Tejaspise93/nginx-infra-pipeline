@@ -55,7 +55,7 @@ pipeline {
             }
             steps {
                 dir("${ANSIBLE_DIR}") {
-                    sh 'ansible-playbook -i inventory.ini nginx_playbook.yml'
+                    sh '/var/lib/jenkins/.local/bin/ansible-playbook -i inventory.ini nginx_playbook.yml'
                 }
             }
         }
