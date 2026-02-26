@@ -1,0 +1,14 @@
+# Personal Notes
+SETUP_NOTES.md
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+crash.log
+
+# Ansible
+*.retry
+ansible/inventory.ini
