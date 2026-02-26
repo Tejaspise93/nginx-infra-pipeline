@@ -83,13 +83,7 @@ nginx-infra-pipeline/
 
 ## Setup Guide
 
-### Step 1 — Clone the repo
-```bash
-git clone https://github.com/<your-username>/nginx-infra-pipeline.git
-cd nginx-infra-pipeline
-```
-
-### Step 2 — Run Jenkins server setup (first time only)
+### Step 1 — Run Jenkins server setup (first time only)
 SSH into your Jenkins server and run:
 ```bash
 bash jenkins_server_setup.sh
@@ -97,7 +91,7 @@ bash jenkins_server_setup.sh
 
 This will install Git, Terraform, Ansible, and generate an SSH key for the jenkins user. At the end it prints the **public key** — save it, you'll need it in the next step.
 
-### Step 3 — Configure Terraform
+### Step 2 — Configure Terraform
 Edit `terraform/terraform.tfvars` with your values:
 ```hcl
 aws_region      = "<your-aws-region>"          # e.g. us-east-1, ap-south-1
@@ -108,13 +102,13 @@ key_name        = "<your-key-pair-name>"       # name for the key pair in AWS
 public_key_path = "/var/lib/jenkins/.ssh/id_rsa.pub"  # do not change
 ```
 
-### Step 4 — Attach IAM Role to Jenkins EC2
+### Step 3 — Attach IAM Role to Jenkins EC2
 - Go to AWS Console → IAM → Roles → Create Role
 - Trusted entity: **EC2**
 - Attach: `AmazonEC2FullAccess` and `AmazonVPCReadOnlyAccess`
 - Go to EC2 → Jenkins instance → Actions → Security → Modify IAM Role → attach the role
 
-### Step 5 — Configure Jenkins Pipeline
+### Step 4 — Configure Jenkins Pipeline
 - Open Jenkins UI at `http://<jenkins-ip>:8080`
 - Click **New Item** → **Pipeline**
 - Under **Pipeline** select **Pipeline script from SCM**
@@ -124,7 +118,7 @@ public_key_path = "/var/lib/jenkins/.ssh/id_rsa.pub"  # do not change
 - Script Path: `Jenkinsfile`
 - Save
 
-### Step 6 — Run the Pipeline
+### Step 5 — Run the Pipeline
 - Click **Build with Parameters**
 - Select **ACTION**: `apply`
 - Click **Build**
