@@ -49,6 +49,16 @@ pipeline {
             }
         }
 
+        stage('Wait for Instances') {   // wait for instances to be up before running Ansible
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                echo 'Waiting 60 seconds for instances to boot...'
+                sh 'sleep 60'
+            }
+        }
+
         stage('Ansible Playbook') {
             when {
                 expression { params.ACTION == 'apply' }
