@@ -47,11 +47,16 @@ export PATH=$HOME/.local/bin:$PATH
 ansible --version | head -1
 
 # Install ansible for jenkins user
+# IMPORTANT: Use heredoc (<<EOF) instead of -c "command"
+# sudo su - jenkins -c does NOT reliably source .bash_profile
 echo "  → Installing Ansible for jenkins user..."
 if id "jenkins" &>/dev/null; then
-    sudo su - jenkins -c "pip3 install ansible --user"
-    sudo su - jenkins -c "grep -q '.local/bin' ~/.bash_profile || echo 'export PATH=\$HOME/.local/bin:\$PATH' >> ~/.bash_profile"
-    sudo su - jenkins -c "source ~/.bash_profile && ansible --version | head -1"
+    sudo su - jenkins << 'EOF'
+pip3 install ansible --user
+grep -q '.local/bin' ~/.bash_profile || echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bash_profile
+source ~/.bash_profile
+ansible --version | head -1
+EOF
 else
     echo "  ⚠ Jenkins user not found yet, skipping. Re-run after Jenkins is installed."
 fi
@@ -107,16 +112,19 @@ echo -n "Git           : " && git --version
 echo -n "Ansible       : " && ansible --version | head -1
 echo -n "Terraform     : " && terraform -version | head -1
 echo -n "Java          : " && java -version 2>&1 | head -1
-echo -n "Ansible (jenkins) : " && sudo su - jenkins -c "source ~/.bash_profile && ansible --version | head -1" 2>/dev/null || echo "jenkins user not found"
+echo -n "Ansible (jenkins) : " && sudo su - jenkins << 'EOF'
+source ~/.bash_profile && ansible --version | head -1
+EOF
 echo -n "SSH Key       : " && sudo test -f /var/lib/jenkins/.ssh/id_rsa && echo "exists ✓" || echo "not found ✗"
 echo "============================================"
 echo "  Setup Complete! ✓"
 echo "============================================"
 echo ""
 echo "Next Steps:"
-echo "  1. Open Jenkins UI at: http://<this-server-ip>:8080"
-echo "  2. Get admin password:"
+echo "  1. Attach IAM Role to this EC2 (AmazonEC2FullAccess + AmazonVPCReadOnlyAccess)"
+echo "  2. Open Jenkins UI at: http://<this-server-ip>:8080"
+echo "  3. Get admin password:"
 echo "     sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
-echo "  3. Public key is at: /var/lib/jenkins/.ssh/id_rsa.pub"
+echo "  4. Public key is at: /var/lib/jenkins/.ssh/id_rsa.pub"
 echo "     This will be used by Terraform to create AWS key pair"
 echo "============================================"
