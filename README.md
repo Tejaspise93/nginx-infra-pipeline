@@ -154,10 +154,3 @@ Click Build with Parameters -> select ACTION: `destroy` -> Build
 This destroys all EC2 instances, security groups, and key pairs created by Terraform.
 
 ---
-
-## Future Improvements
-
-- Move nginx servers to a private subnet with a NAT gateway
-- Add a load balancer in front of the nginx servers
-- Store Terraform state remotely using an S3 backend
-- Add a manual approval stage in Jenkins before apply
